@@ -1,0 +1,12 @@
+A quick way to recognize common Big O patterns:
+
+O(1) → Do one thing, no matter how much data exists.
+Example: grabbing the first book from a shelf.
+O(log n) → Repeatedly cut the problem in half.
+Example: finding a word in a dictionary.
+O(n) → Look at every item once.
+Example: counting how many red shirts are in a laundry basket.
+O(n²) → Compare every item with every other item.
+Example: introducing every person in a room to every other person.
+O(n log n) → Organize or sort a collection efficiently.
+Example: sorting a large stack of papers alphabetically.
