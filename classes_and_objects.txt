@@ -1,0 +1,29 @@
+Classes and Objects: The Core Idea
+
+A class is a blueprint. An object is something built from that blueprint.
+
+Think of a cookie cutter and cookies. The cookie cutter (class) defines the shape. Each cookie (object) is a specific instance created from that cutter.
+__init__ is the constructor a special method that runs automatically when you create a new object. It sets up the object’s initial data.
+
+self is Python’s way of referring to the specific object. When alice.is_passing() is called, self inside the method refers to the alice object.
+
+Attributes (self.name, self.grade) are the data each object carries.
+
+Methods (is_passing()) are functions that belong to the class. They can access and modify the object’s attributes through self.
+What’s happening:
+
+    Person is the parent class. It defines what every person has.
+    Student and Instructor are child classes. They inherit from Person but add their own attributes and override introduce().
+    super().__init__(name, email) calls the parent’s constructor so you don’t repeat setup code.
+
+When NOT to Use OOP
+
+OOP is a tool, not a religion. Sometimes it adds unnecessary complexity:
+
+Simple scripts - Quick data-cleaning script that runs once? Functions are fine.
+
+Stateless operations - If a function doesn’t need to remember anything between calls, it doesn’t need to be a method.
+
+Data-only structures - Just bundling data? Consider a dictionary or dataclass instead.
+
+A good rule of thumb: use OOP when you have data and behavior that belong together, especially when you’ll create multiple instances or need to build specialized versions through inheritance.
