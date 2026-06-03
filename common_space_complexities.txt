@@ -1,0 +1,84 @@
+The Common Space Complexities
+
+O(1) - Constant Space
+
+# O(1) space — only creates two variables, no matter how long the list
+def find_max(numbers):
+    biggest = numbers[0]    # One variable
+    for num in numbers:     # 'num' is just a reference, not a copy
+        if num > biggest:
+            biggest = num
+    return biggest
+
+No matter whether the list has 10 or 10 million items, this function only ever uses two extra variables: biggest and num. That’s constant space.
+
+O(n) - Linear Space
+
+The function creates a new data structure that grows with the input size.
+# O(n) space — creates a new list the same size as the input
+def double_all(numbers):
+    result = []                  # New list
+    for num in numbers:
+        result.append(num * 2)   # Grows with each input element
+    return result
+
+If the input has 1,000 items, result will also have 1,000 items. Double the input, double the extra memory.
+
+O(n²) - Quadratic Space
+
+The function creates a data structure that grows with the square of the input.
+# O(n²) space — creates an n×n grid
+def multiplication_table(n):
+    table = []
+    for i in range(n):
+        row = []
+        for j in range(n):
+            row.append(i * j)
+        table.append(row)
+    return table
+
+For n=100, the table has 10,000 entries. For n=1,000, it has 1,000,000 entries.
+The Time-Space Tradeoff
+
+Remember the three duplicate-checking functions from the Big O lesson?
+
+Approach
+	
+
+Time
+	
+
+Space
+
+Nested loops
+	
+
+O(n²)
+	
+
+O(1) - no extra data structures
+
+Sort first
+	
+
+O(n log n)
+	
+
+O(n) - sorting creates a copy
+
+Use a set
+	
+
+O(n)
+	
+
+O(n) - the set grows with the data
+
+The nested loops approach is the slowest but uses no extra memory. The set approach is the fastest but creates an extra data structure. You traded memory for speed.
+
+This tradeoff shows up everywhere:
+
+    Caching: Storing computed results in a dictionary (uses memory) so you don’t have to recompute them (saves time).
+    Database indexes (Module 3): An index is extra data stored to make lookups faster, space for speed.
+    Embedding storage (Module 7): Storing pre-computed vector embeddings uses significant memory but makes similarity searches near-instant.
+
