@@ -43,36 +43,17 @@ The Time-Space Tradeoff
 Remember the three duplicate-checking functions from the Big O lesson?
 
 Approach
-	
-
+	- 1)Nested loops
+    - 2)Sort first
+    - 3)Use a Set
 Time
-	
-
+	- 1) O(n^2)
+    - 2) O(n log n)
+    - 3) O(n)
 Space
-
-Nested loops
-	
-
-O(n²)
-	
-
-O(1) - no extra data structures
-
-Sort first
-	
-
-O(n log n)
-	
-
-O(n) - sorting creates a copy
-
-Use a set
-	
-
-O(n)
-	
-
-O(n) - the set grows with the data
+	- 1) O(1) - no extra data structures
+    - 2) O(n) - sorting creates a copy
+    - 3) O(n) - the set grows with the data
 
 The nested loops approach is the slowest but uses no extra memory. The set approach is the fastest but creates an extra data structure. You traded memory for speed.
 
