@@ -1,0 +1,45 @@
+Linked Lists: A Chain of Connected Nodes
+
+Imagine a scavenger hunt. You get a first clue that says “Go to the library.” At the library, you find a note that says “The secret word is PYTHON. Next clue: go to the park.” At the park: “The secret word is DATA. Next clue: go to the coffee shop.” And so on.
+
+Each stop has two things: some content (the secret word) and a pointer to the next stop (where to go next). You can only follow the chain forward, you can’t jump to the 5th stop without visiting stops 1 through 4 first.
+
+This is exactly how a linked list works. Each element (called a node) stores a value and a reference (pointer) to the next node.
+
+The key insight: Python lists are great for reading data by position. Linked lists are great for inserting and deleting data. Neither is universally better.
+
+Stacks: Last In, First Out (LIFO)
+
+Think of a stack of plates at a buffet. You can only add a plate to the top, and you can only take a plate from the top.
+
+A stack follows the same rule: the last item added is the first one removed. This is called LIFO, Last In, First Out.
+
+The two core operations:
+
+    Push: Add an item to the top of the stack
+    Pop: Remove and return the item from the top of the stack
+
+Where stacks appear in the real world:
+
+    Your browser’s back button - Each page you visit is pushed onto the stack. Click “back” and the most recent page is popped off.
+    Undo/redo in text editors - Each action is pushed onto an undo stack. Ctrl+Z pops the most recent action.
+    Python’s function call stack - When function A calls function B, which calls function C, Python uses a stack to track where to return.
+
+Queues: First In, First Out (FIFO)
+
+Think of a line at a grocery store. The first person in line is the first person served. New people join at the back.
+
+A queue follows the same rule: the first item added is the first one removed. This is called FIFO, First In, First Out.
+
+The two core operations:
+
+    Enqueue: Add an item to the back of the queue
+    Dequeue: Remove and return the item from the front of the queue
+
+Where queues appear in AI engineering:
+
+    Task queues - When your API receives more requests than it can process, incoming requests are placed in a queue.
+    Message queues - Tools like RabbitMQ and Redis use queues to pass tasks between different parts of a system.
+    Background job processing - In Module 5 (FastAPI), you’ll learn about background tasks managed using a queue.
+
+In Python, use collections.deque for queues, it provides O(1) operations for both enqueue and dequeue. A regular list would work but pop(0) is O(n) because it shifts all remaining elements.
