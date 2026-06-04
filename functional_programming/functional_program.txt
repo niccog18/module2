@@ -1,0 +1,114 @@
+The Core Idea: Functions as First-Class Citizens
+
+In Python, functions are values, just like numbers, strings, and lists. You can store them in variables, pass them as arguments to other functions, and return them from functions.
+# Storing a function in a variable
+def double(x):
+    return x * 2
+
+my_func = double     # No parentheses — storing the function, not calling it
+print(my_func(5))    # 10 — calling it through the variable
+
+# Passing a function as an argument
+def apply_to_all(func, data):
+    """Apply a function to every item in a list."""
+    return [func(item) for item in data]
+
+numbers = [1, 2, 3, 4, 5]
+doubled = apply_to_all(double, numbers)
+print(doubled)  # [2, 4, 6, 8, 10]
+
+
+
+Lambda: Anonymous Functions
+
+Sometimes you need a tiny function that you’ll only use once. That’s where lambda comes in.
+
+# Full function definition
+def double(x):
+    return x * 2
+
+# Lambda equivalent — same function, one line
+double = lambda x: x * 2
+
+Lambdas are most useful when passed directly to another function:
+pairs = [(1, "banana"), (3, "apple"), (2, "cherry")]
+sorted_pairs = sorted(pairs, key=lambda pair: pair[1])
+print(sorted_pairs)  # [(3, 'apple'), (1, 'banana'), (2, 'cherry')]
+
+Rule of thumb: If a lambda is more than one short expression, write a named function instead. Readability always wins.
+
+
+
+Map, Filter, and Reduce
+
+These three functions are the workhorses of functional programming.
+
+map(function, iterable) - Apply a function to every item:
+
+names = ["alice", "bob", "charlie"]
+capitalized = list(map(str.upper, names))
+print(capitalized)  # ['ALICE', 'BOB', 'CHARLIE']
+
+filter(function, iterable) - Keep items where the function returns True:
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+evens = list(filter(lambda x: x % 2 == 0, numbers))
+print(evens)  # [2, 4, 6, 8, 10]
+
+reduce(function, iterable) - Accumulate a single result:
+from functools import reduce
+
+numbers = [1, 2, 3, 4, 5]
+total = reduce(lambda acc, x: acc + x, numbers)
+print(total)  # 15
+
+
+
+List Comprehensions: Python’s Preferred Functional Style
+
+In practice, most Python developers prefer list comprehensions over map and filter:
+# map + lambda
+squared = list(map(lambda x: x ** 2, numbers))
+
+# List comprehension — same result, more readable
+squared = [x ** 2 for x in numbers]
+
+# filter + lambda
+evens = list(filter(lambda x: x % 2 == 0, numbers))
+
+# List comprehension with condition
+evens = [x for x in numbers if x % 2 == 0]
+
+# Combining map and filter
+even_squares = [x ** 2 for x in numbers if x % 2 == 0]
+
+
+
+Pure Functions and Immutability
+
+A pure function always returns the same output for the same input and has no side effects.
+# Pure function — always returns the same result, modifies nothing
+def add_tax(price, rate=0.08):
+    return price * (1 + rate)
+
+# Impure function — modifies the input list (side effect)
+def add_item(shopping_list, item):
+    shopping_list.append(item)  # Mutates the original list!
+    return shopping_list
+
+Pure functions are easier to test, debug, and reason about. When you process data in pandas, you’ll often chain pure transformations, each step takes data in and returns new data out.
+
+
+When to Use What
+
+Use OOP When...
+You have data + behavior that belong together
+You need multiple instances with their own state
+The problem maps to real-world objects
+You're building reusable, extensible structures
+
+Use Functional When...
+You're transforming data through a series of steps 
+Functions don't need to remember state between calls
+The problem maps to data flowing through transformations
+You're writing concise data processing pipelines
+
