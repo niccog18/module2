@@ -1,0 +1,66 @@
+What Is a DataFrame?
+
+A DataFrame is pandas’ core data structure. Think of it as a spreadsheet in Python.
+import pandas as pd
+
+data = {
+    "name": ["Alice", "Bob", "Charlie", "Diana"],
+    "department": ["Engineering", "Marketing", "Engineering", "Sales"],
+    "salary": [95000, 72000, 110000, 68000],
+    "years": [5, 2, 8, 1],
+}
+
+df = pd.DataFrame(data)
+print(df)
+
+Output:
+      name   department  salary  years
+0    Alice  Engineering   95000      5
+1      Bob    Marketing   72000      2
+2  Charlie  Engineering  110000      8
+3    Diana        Sales   68000      1
+
+Loading Real Data 
+df = pd.read_csv("employees.csv")
+
+# Quick inspection — always do this first
+1) print(df.shape)          # (rows, columns)
+2) print(df.dtypes)         # Column types
+3) print(df.head())         # First 5 rows
+4) print(df.describe())     # Statistical summary
+5) print(df.info())         # Column names, types, non-null counts
+These five Commands(first moves on any new dataset)
+
+Selecting Data 
+names = df["name"]                # Single column (Series)
+subset = df[["name", "salary"]]   # Multiple columns (DataFrame)
+first_three = df.iloc[0:3]        # Rows by position
+row = df.loc[0]                   # Rows by label/index
+
+
+Filtering: the Power Move 
+high_earners = df[df["salary"] > 80000]
+
+engineers = df[df["department"] == "Engineering"]
+
+# Combined conditions: use & (not 'and'), wrap each in parentheses
+senior_engineers = df[(df["department"] == "Engineering") & (df["salary"] >= 90000)]
+
+
+Sorting
+df_sorted = df.sort_values("salary", ascending=False)
+
+df_sorted = df.sort_values(["department", "salary"], ascending=[True, False])
+
+
+Grouping and Aggregation
+-This is where pandas becomes essential:
+dept_avg = df.groupby("department")["salary"].mean()
+
+dept_summary = df.groupby("department").agg(
+    avg_salary=("salary", "mean"),
+    max_salary=("salary", "max"),
+    headcount=("name", "count"),
+    avg_years=("years", "mean"),
+)
+* This kind of analysis would take 20+ lines of loop-based Python, done in one clear expression.
