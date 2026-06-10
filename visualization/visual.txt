@@ -1,0 +1,181 @@
+The Five Common Data Problems
+1) Missing Values
+    - the show up as NaN(Not a Number) in Pandas.
+
+import pandas as pd
+
+# Detect missing values
+print(df.isnull().sum())  # Count missing values per column
+print(df.isnull().mean())  # Percentage missing per column
+
+Strategies for handling them:
+
+    Drop rows: df.dropna() - if missing data makes the row useless
+    Drop specific rows: df.dropna(subset=["name", "email"]) - only drop if certain columns are missing
+    Drop columns: df.drop(columns=["bad_column"]) - if a column is mostly empty
+    Fill with a value: df["col"].fillna(0) or df["col"].fillna(df["col"].mean())
+    Fill forward/backward: df["col"].fillna(method="ffill") - carry the last known value forward
+
+2) Duplicate Rows
+# Detect duplicates
+print(df.duplicated().sum())               # Total duplicate rows
+print(df.duplicated(subset=["email"]))     # Duplicates based on email only
+
+# Remove duplicates
+df_clean = df.drop_duplicates()                          # Exact duplicate rows
+df_clean = df.drop_duplicates(subset=["email"])          # Dedup by specific column
+df_clean = df.drop_duplicates(subset=["email"], keep="last")  # Keep last occurrence
+
+3) Wrong Data Types
+CSV files load everything as strings. Numbers that look like "95000" are actually text until you convert them.
+# Convert to numeric (invalid values become NaN)
+df["price"] = pd.to_numeric(df["price"], errors="coerce")
+
+# Convert to datetime (invalid dates become NaT — "Not a Time")
+df["date"] = pd.to_datetime(df["date"], errors="coerce")
+
+The errors="coerce" parameter is critical, it converts unparseable values to NaN/NaT instead of crashing your program. After conversion, you can then decide how to handle those NaN values.
+
+4) Inconsistent Formatting
+Real data has inconsistent casing, trailing whitespace, and formatting variations:
+# Strip whitespace
+df["city"] = df["city"].str.strip()
+
+# Standardize casing
+df["city"] = df["city"].str.title()       # "new york" → "New York"
+df["email"] = df["email"].str.lower()     # "Alice@CO.COM" → "alice@co.com"
+
+# Replace variations
+df["status"] = df["status"].replace({"Y": "Yes", "y": "Yes", "N": "No", "n": "No"})
+
+5) Outliers and Invalid Values
+Sometimes data is present but impossible, a negative salary, an age of 300, a date in the year 3025:
+# Find suspicious values
+print(df[df["age"] > 120])
+print(df[df["salary"] < 0])
+
+# Replace invalid values with NaN
+df.loc[df["age"] > 120, "age"] = pd.NA
+df.loc[df["salary"] < 0, "salary"] = pd.NA
+====================================
+
+The Cleaning Workflow
+Every data cleaning task follows the same pattern:
+1) Inspect - df.shape, df.dtypes, df.isnull().sum(), df.describe(), df.head()
+2) Identity problems - wrong types, missing values, duplicates, inconsistencies, Outliers
+3) Fix each problems - convert types, fill/drop missing deduplicate, standardize, filter outliers
+4) Verify - run the onspection commands again to confirm the fixes worked
+====================================
+
+Visualization: Telling the Story
+
+Once your data is clean, visualization reveals patterns that tables hide. A well-chosen chart can communicate in seconds what takes paragraphs to explain in text.
+
+Python's standard plotting library is matplotlib. It's not the prettiest by default, but it's the foundation that almost every other visualization library builds on.
+
+The Three Chart Types You Need Most
+
+Bar chart - comparing categories (revenue by department, products by sales count):
+import matplotlib.pyplot as plt
+
+departments = ["Engineering", "Sales", "Marketing", "Support"]
+headcount = [45, 30, 20, 15]
+
+plt.figure(figsize=(8, 5))
+plt.bar(departments, headcount, color="steelblue")
+plt.title("Employees by Department")
+plt.xlabel("Department")
+plt.ylabel("Headcount")
+plt.tight_layout()        # Prevents labels from being cut off
+plt.savefig("headcount.png", dpi=150)  # Save to file
+plt.show()
+
+Use a bar chart when you're comparing discrete categories. The x-axis is categorical (departments, products, cities), the y-axis is numeric (count, revenue, average).
+
+Line chart - showing trends over time (daily sales, monthly growth, temperature over a year):
+dates = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+revenue = [12000, 15000, 13500, 18000, 22000, 19500]
+
+plt.figure(figsize=(8, 5))
+plt.plot(dates, revenue, marker="o", color="coral", linewidth=2)
+plt.title("Monthly Revenue")
+plt.xlabel("Month")
+plt.ylabel("Revenue ($)")
+plt.grid(True, alpha=0.3)   # Light gridlines for readability
+plt.tight_layout()
+plt.show()
+
+Use a line chart when the x-axis is sequential (time, steps, versions). The line implies a connection between points, things that happen in order.
+
+Histogram - showing how a variable is distributed (salary spread, score distribution, age demographics):
+import numpy as np
+
+salaries = [45000, 52000, 58000, 62000, 65000, 68000, 70000, 72000,
+            75000, 78000, 82000, 88000, 95000, 110000, 150000]
+
+plt.figure(figsize=(8, 5))
+plt.hist(salaries, bins=8, color="seagreen", edgecolor="black")
+plt.title("Salary Distribution")
+plt.xlabel("Salary ($)")
+plt.ylabel("Number of Employees")
+plt.tight_layout()
+plt.show()
+
+Use a histogram when you want to see the shape of a single numeric variable. Are salaries clustered in the middle? Is there a long tail to the right? A histogram answers these questions instantly.
+
+The Rule
+
+Choose the chart type based on what question you're answering:
+
+    "How do these categories compare?" → Bar chart
+    "How has this changed over time?" → Line chart
+    "How is this variable distributed?" → Histogram
+
+Multiple Charts in One Figure
+
+You can create multi-panel figures with plt.subplots():
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))  # 1 row, 3 columns
+
+# Chart 1
+axes[0].bar(departments, headcount, color="steelblue")
+axes[0].set_title("Headcount by Department")
+
+# Chart 2
+axes[1].plot(dates, revenue, marker="o", color="coral")
+axes[1].set_title("Monthly Revenue")
+
+# Chart 3
+axes[2].hist(salaries, bins=8, color="seagreen", edgecolor="black")
+axes[2].set_title("Salary Distribution")
+
+plt.tight_layout()
+plt.savefig("dashboard.png", dpi=150)
+plt.show()
+
+Notice the syntax difference: with plt.subplots(), you use axes[0].bar() instead of plt.bar(), and axes[0].set_title() instead of plt.title(). This is because each chart lives on its own subplot ("axes" object).
+Saving Charts
+
+plt.savefig() saves the current figure to a file. Call it before plt.show() , after plt.show(), the figure is cleared.
+plt.savefig("my_chart.png", dpi=150, bbox_inches="tight")
+# dpi=150: good resolution for presentations
+# bbox_inches="tight": prevents labels from being cut off
+
+Why This Matters for AI Engineering
+
+Every dataset you feed to an AI model will need cleaning first. Garbage in, garbage out is not a cliché, it's a law. A model trained on dirty data will learn the wrong patterns. A RAG system built on messy documents will retrieve irrelevant results.
+
+Data cleaning and visualization aren't glamorous skills, but they are among the most practically valuable skills in the entire AI engineering toolkit.
+
+
+The Cleaning Checklist
+
+    1)df.shape - how big is it?
+    2)df.dtypes - are types correct?
+    3)df.isnull().sum() - what’s missing?
+    4)df.duplicated().sum() - any duplicates?
+    5)Inspect text columns for whitespace and casing
+    6)Check numeric columns for impossible values
+    7)Convert types (to_numeric, to_datetime)
+    8)Handle missing values
+    9)Remove duplicates
+    10)Verify with df.describe() after cleaning
